@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/kaalicartel/core-contracts#readme",
   "dependencies": {
+    "@openzeppelin/contracts": "^4.6.0",
     "hardhat": "^2.9.9"
   },
   "devDependencies": {
