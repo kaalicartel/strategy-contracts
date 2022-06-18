@@ -11,7 +11,7 @@ import {IUniswapV2Router02} from "../../interfaces/uniswap/IUniswapV2Router02.so
 import {IZapDepositor} from "../../interfaces/IZapDepositor.sol";
 import {SafeMath} from "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
-contract EPSPegTrader {
+contract TraderBelowPeg {
     using SafeMath for uint256;
 
     IERC20WithDecimals public lp;
@@ -24,47 +24,9 @@ contract EPSPegTrader {
     IERC20WithDecimals public wbnb;
 
     address private me;
-    IEllipsisRouter public router;
+    IEllipsisRouter public ellipsis;
     IUniswapV2Router02 public pancakeswap;
     IBorrowerOperations borrowerOperations;
-
-    function repegARTHWhenAbovePeg() external {
-        // flashloan arth
-        uint256 flashloanAmount;
-
-        // we have arth; sell it for busd to bring it back to the peg
-        // take the busd profits and convert it into bnb
-        // deposit bnb into the trove
-        // mint arth and payback flashloan
-
-        uint256 busdToSell;
-        router.estimateARTHtoBuy(busdToSell);
-
-        uint256 busdProfits;
-        uint256 bnbOutMin;
-
-        address[] memory path = new address[](2);
-        path[0] = address(busd);
-        path[1] = address(wbnb);
-
-        pancakeswap.swapExactTokensForETH(
-            busdProfits,
-            bnbOutMin,
-            path,
-            me,
-            block.timestamp
-        );
-
-        uint256 _maxFee;
-        borrowerOperations.adjustTrove{value: me.balance}(
-            _maxFee,
-            0,
-            flashloanAmount,
-            true,
-            address(0),
-            address(0)
-        );
-    }
 
     function repegARTHWhenBelowPeg() external {
         // flashloan arth
@@ -74,7 +36,7 @@ contract EPSPegTrader {
         // payback flashloan with arth obtained
 
         uint256 busdNeeded;
-        router.estimateARTHtoSell(busdNeeded);
+        ellipsis.estimateARTHtoSell(busdNeeded);
 
         uint256 busdProfits;
         uint256 bnbOutMin;
