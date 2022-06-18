@@ -2,11 +2,11 @@
 
 pragma solidity ^0.8.0;
 
-import {IERC20, IERC20WithDecimals} from "./interfaces/IERC20WithDecimals.sol";
-import {IZapDepositor} from "./interfaces/IZapDepositor.sol";
-import {IStableSwap} from "./interfaces/IStableSwap.sol";
-import {IERC20Wrapper} from "./interfaces/IERC20Wrapper.sol";
-import {IEllipsisRouter} from "./interfaces/IEllipsisRouter.sol";
+import {IEllipsisRouter} from "../interfaces/IEllipsisRouter.sol";
+import {IERC20, IERC20WithDecimals} from "../interfaces/IERC20WithDecimals.sol";
+import {IERC20Wrapper} from "../interfaces/IERC20Wrapper.sol";
+import {IStableSwap} from "../interfaces/IStableSwap.sol";
+import {IZapDepositor} from "../interfaces/IZapDepositor.sol";
 import {SafeMath} from "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 contract EllipsisARTHRouter is IEllipsisRouter {

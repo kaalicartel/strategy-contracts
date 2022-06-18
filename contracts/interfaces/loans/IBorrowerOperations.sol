@@ -3,37 +3,6 @@ pragma solidity ^0.8.0;
 
 // Common interface for the Trove Manager.
 interface IBorrowerOperations {
-    // --- Events ---
-
-    event TroveManagerAddressChanged(address _newTroveManagerAddress);
-    event ActivePoolAddressChanged(address _activePoolAddress);
-    event DefaultPoolAddressChanged(address _defaultPoolAddress);
-    event StabilityPoolAddressChanged(address _stabilityPoolAddress);
-    event GasPoolAddressChanged(address _gasPoolAddress);
-    event CollSurplusPoolAddressChanged(address _collSurplusPoolAddress);
-    event GovernanceAddressChanged(address _newGovernanceAddress);
-    event SortedTrovesAddressChanged(address _sortedTrovesAddress);
-    event ARTHTokenAddressChanged(address _arthTokenAddress);
-
-    event TroveCreated(address indexed _borrower, uint256 arrayIndex);
-    event TroveUpdated(
-        address indexed _borrower,
-        uint256 _debt,
-        uint256 _coll,
-        uint256 stake,
-        BorrowerOperation operation
-    );
-    event ARTHBorrowingFeePaid(address indexed _borrower, uint256 _ARTHFee);
-    event FrontEndRegistered(address indexed _frontend, uint256 timestamp);
-    event PaidARTHBorrowingFeeToEcosystemFund(
-        address indexed _ecosystemFund,
-        uint256 _ARTHFee
-    );
-    event PaidARTHBorrowingFeeToFrontEnd(
-        address indexed _frontEndTag,
-        uint256 _ARTHFee
-    );
-
     enum BorrowerOperation {
         openTrove,
         closeTrove,

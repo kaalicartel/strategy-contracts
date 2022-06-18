@@ -2,12 +2,13 @@
 
 pragma solidity ^0.8.0;
 
-import {IERC20, IERC20WithDecimals} from "./interfaces/IERC20WithDecimals.sol";
-import {IZapDepositor} from "./interfaces/IZapDepositor.sol";
-import {IStableSwap} from "./interfaces/IStableSwap.sol";
-import {IERC20Wrapper} from "./interfaces/IERC20Wrapper.sol";
-import {IEllipsisRouter} from "./interfaces/IEllipsisRouter.sol";
-import {IUniswapV2Router02} from "./interfaces/uniswap/IUniswapV2Router02.sol";
+import {IBorrowerOperations} from "../../interfaces/loans/IBorrowerOperations.sol";
+import {IEllipsisRouter} from "../../interfaces/IEllipsisRouter.sol";
+import {IERC20, IERC20WithDecimals} from "../../interfaces/IERC20WithDecimals.sol";
+import {IERC20Wrapper} from "../../interfaces/IERC20Wrapper.sol";
+import {IStableSwap} from "../../interfaces/IStableSwap.sol";
+import {IUniswapV2Router02} from "../../interfaces/uniswap/IUniswapV2Router02.sol";
+import {IZapDepositor} from "../../interfaces/IZapDepositor.sol";
 import {SafeMath} from "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 contract EPSPegTrader {
@@ -25,11 +26,17 @@ contract EPSPegTrader {
     address private me;
     IEllipsisRouter public router;
     IUniswapV2Router02 public pancakeswap;
+    IBorrowerOperations borrowerOperations;
 
     function repegARTHWhenAbovePeg() external {
+        // flashloan arth
+        uint256 flashloanAmount;
+
         // we have arth; sell it for busd to bring it back to the peg
         // take the busd profits and convert it into bnb
-        // deposit bnb into a trove to mint arth
+        // deposit bnb into the trove
+        // mint arth and payback flashloan
+
         uint256 busdToSell;
         router.estimateARTHtoBuy(busdToSell);
 
@@ -47,12 +54,25 @@ contract EPSPegTrader {
             me,
             block.timestamp
         );
+
+        uint256 _maxFee;
+        borrowerOperations.adjustTrove{value: me.balance}(
+            _maxFee,
+            0,
+            flashloanAmount,
+            true,
+            address(0),
+            address(0)
+        );
     }
 
     function repegARTHWhenBelowPeg() external {
-        // we have arth; sell it for busd to bring it back to the peg
-        // take the busd profits and convert it into bnb
-        // deposit bnb into a trove to mint arth
+        // flashloan arth
+        // we have arth; we redeem it for bnb from our loan
+        // swap bnb for busd
+        // buy arth from the market and bring it back to the peg
+        // payback flashloan with arth obtained
+
         uint256 busdNeeded;
         router.estimateARTHtoSell(busdNeeded);
 
