@@ -167,16 +167,6 @@ contract EllipsisARTHRouter is IEllipsisRouter {
         return arthUsdOut.div(2);
     }
 
-    function _flush(address to) internal {
-        if (arthUsd.balanceOf(me) > 0) {
-            arthUsd.withdraw(arthUsd.balanceOf(me).div(2));
-        }
-
-        if (arth.balanceOf(me) > 0) arth.transfer(to, arth.balanceOf(me));
-        if (lp.balanceOf(me) > 0) lp.transfer(to, lp.balanceOf(me));
-        if (busd.balanceOf(me) > 0) busd.transfer(to, busd.balanceOf(me));
-    }
-
     function _removeLiquidityOneCoin(
         uint256 burnAmount,
         int128 i,
@@ -212,5 +202,15 @@ contract EllipsisARTHRouter is IEllipsisRouter {
         );
 
         require(success, "EllipsisARTHRouter: add_liquidity failed");
+    }
+
+    function _flush(address to) internal {
+        if (arthUsd.balanceOf(me) > 0) {
+            arthUsd.withdraw(arthUsd.balanceOf(me).div(2));
+        }
+
+        if (arth.balanceOf(me) > 0) arth.transfer(to, arth.balanceOf(me));
+        if (lp.balanceOf(me) > 0) lp.transfer(to, lp.balanceOf(me));
+        if (busd.balanceOf(me) > 0) busd.transfer(to, busd.balanceOf(me));
     }
 }
